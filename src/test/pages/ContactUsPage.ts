@@ -19,6 +19,8 @@ class ContactUsPage extends BasePage {
     private readonly emailInputFieldError: Locator;
     private readonly messageInputFieldError: Locator;
     private readonly privacyPolicyCheckboxError: Locator;
+    private readonly successModal: Locator;
+    private readonly successModalOkButton: Locator;
 
     constructor(page) {
         super(page);
@@ -35,6 +37,8 @@ class ContactUsPage extends BasePage {
         this.emailInputFieldError = page.locator('//input[@id="email"]/ancestor::label/following-sibling::span');
         this.messageInputFieldError = page.locator('//textarea[@id="message"]/ancestor::label/following-sibling::span');
         this.privacyPolicyCheckboxError = page.locator('//input[@name="checkbox"]/following-sibling::span[contains(@class, "Form_error")]');
+        this.successModal = page.locator('//p[text()="Your message has been sent."]/ancestor::div[contains(@class, "PopUpResult_modal")]');
+        this.successModalOkButton = page.locator('//p[text()="Your message has been sent."]/ancestor::div[contains(@class, "PopUpResult_modal")]//button');
     }
 
     public async navigate(): Promise<void> {
@@ -43,6 +47,10 @@ class ContactUsPage extends BasePage {
 
     public async isPageOpened(): Promise<void> {
         await super.isElementDisplayed(this.pageTitle);
+    }
+
+    public async scrollToContactUsForm(): Promise<void> {
+        await super.scrollElementIntoViewIfNeeded(this.contactWithUsForm);
     }
 
     public async isContactWithUsFormDisplayed(): Promise<void> {
@@ -123,6 +131,18 @@ class ContactUsPage extends BasePage {
 
     public async isPrivacyPolicyCheckboxChecked(): Promise<void> {
         await super.doesElementHaveTheProperty(this.privacyPolicyCheckbox, 'checked', true);
+    }
+
+    public async waitUntilSuccessModalIsDisplayed(): Promise<void> {
+        await super.waitUntilElementIsDisplayed(this.successModal);
+    }
+
+    public async isSuccessModalDisplayed(): Promise<void> {
+        await super.isElementDisplayed(this.successModal);
+    }
+
+    public async closeSuccessModal(): Promise<void> {
+        await super.click(this.successModalOkButton);
     }
 }
 
